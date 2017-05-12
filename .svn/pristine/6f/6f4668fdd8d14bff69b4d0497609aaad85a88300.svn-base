@@ -1,5 +1,0 @@
-先已将app放到tomcat的虚拟目录中，不需要放在war里面（不科学）
-tomcat配置多个虚拟目录：
-	配置多个
-	<Context path= "/iupload" docBase= "D:\test\srcFile" reloadable= "false"/>
-	即可（注：eclipse等开发工具中有区别）

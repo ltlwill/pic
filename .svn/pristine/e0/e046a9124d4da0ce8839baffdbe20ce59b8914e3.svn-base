@@ -1,9 +1,0 @@
-.ui-loading-shade{
-	position:absolute;
-	top:0px;
-	left:0px;
-	
-}
-.ui-loading-area{
-	position: absolute;
-}
