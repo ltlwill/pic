@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="com.hengzhiyi.it.pic.dao.IAppFeedbackDao">
+    	<resultMap id="AppFeedbackVOMap" type="com.hengzhiyi.it.pic.vo.AppFeedbackVO">
+    		<result column="question" property="question" jdbcType="VARCHAR"/>
+    		<result column="contact_type" property="contactType" jdbcType="VARCHAR"/>
+    		<result column="contact" property="contact" jdbcType="VARCHAR"/>
+    		<result column="score" property="score" jdbcType="VARCHAR"/>
+    		<result column="platform" property="platform" jdbcType="VARCHAR"/>
+    		<result column="os_version" property="osVersion" jdbcType="VARCHAR"/>
+    		<result column="app_id" property="appId" jdbcType="VARCHAR"/>
+    		<result column="app_version" property="appVersion" jdbcType="VARCHAR"/>
+    		<result column="imei" property="imei" jdbcType="VARCHAR"/>
+    		<result column="model" property="model" jdbcType="VARCHAR"/>
+    		<result column="plus_version" property="plusVersion" jdbcType="VARCHAR"/>
+    		<result column="net" property="net" jdbcType="VARCHAR"/>
+    		<result column="user_id" property="userId" jdbcType="VARCHAR"/>
+    		<result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    		<result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    	</resultMap>
+    
+    	<!-- 增加一个问题 -->
+    	<insert id="add" parameterType="com.hengzhiyi.it.pic.vo.AppFeedbackVO">
+    	  	INSERT INTO pic_app_feedback VALUES
+    	  	(
+    	  		#{question,jdbcType=VARCHAR},
+    	  		#{contactType,jdbcType=VARCHAR},
+    	  		#{contact,jdbcType=VARCHAR},
+    	  		#{score,jdbcType=VARCHAR},
+    	  		#{platform,jdbcType=VARCHAR},
+    	  		#{osVersion,jdbcType=VARCHAR},
+    	  		#{appId,jdbcType=VARCHAR},
+    	  		#{appVersion,jdbcType=VARCHAR},
+    	  		#{imei,jdbcType=VARCHAR},
+    	  		#{model,jdbcType=VARCHAR},
+    	  		#{plusVersion,jdbcType=VARCHAR},
+    	  		#{net,jdbcType=VARCHAR},
+    	  		#{userId,jdbcType=VARCHAR},
+    	  		#{userName,jdbcType=VARCHAR},
+    	  		#{createTime,jdbcType=TIMESTAMP}
+    	  	)
+    	</insert>
+    </mapper>  
+    
+    
+    
+    
+    

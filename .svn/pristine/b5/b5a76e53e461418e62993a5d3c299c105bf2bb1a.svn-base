@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="com.hengzhiyi.it.pic.dao.IUserAccountDao">
+    	<resultMap id="UserAccountVOMap" type="com.hengzhiyi.it.pic.vo.UserAccountVO">
+    		<result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+    		<result column="ACCOUNT_ID" property="accountId" jdbcType="VARCHAR"/>
+    	</resultMap>
+    	
+    	<!-- 单个保存 -->
+    	<insert id="add" parameterType="com.hengzhiyi.it.pic.vo.UserAccountVO">
+    		INSERT INTO pic_user_account(user_id,account_id) 
+    		VALUES
+    		(
+    			#{userId,jdbcType=VARCHAR},
+    			#{accountId,jdbcType=VARCHAR}
+			)
+    	</insert>
+    	<!-- 批量保存 -->
+    	<insert id="addList" parameterType="java.util.List">
+    		<if test="list != null and list.size() > 0">
+    			<foreach item="ref" index="index" collection="list" open="begin" close=";end;" separator=";">
+    				INSERT INTO pic_user_account(user_id,account_id) 
+		    		VALUES
+		    		(
+		    			#{ref.userId,jdbcType=VARCHAR},
+		    			#{ref.accountId,jdbcType=VARCHAR}
+					)
+    			</foreach>
+    		</if>
+    	</insert>
+    	
+    	<!-- 根据userId 获取关系-->
+    	<select id="getByUserId" resultMap="UserAccountVOMap">
+    		SELECT * FROM pic_user_account a WHERE a.user_id = #{0,jdbcType=VARCHAR}
+    	</select>
+    	
+    	<!-- 根据userId 获取绑定的账号ID -->
+    	<select id="getAccountIdsByUserId" resultType="java.lang.String">
+    		SELECT a.account_id FROM pic_user_account a WHERE a.user_id = #{0,jdbcType=VARCHAR}
+    	</select>
+    	
+    	<!-- 根据userId删除 -->
+    	<update id="delByUserId">
+    		DELETE FROM pic_user_account a WHERE a.user_id = #{0,jdbcType=VARCHAR}
+    	</update>
+    	
+    </mapper>  
+    
+    
+    
+    
+    

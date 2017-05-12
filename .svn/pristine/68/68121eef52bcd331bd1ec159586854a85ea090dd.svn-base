@@ -1,0 +1,37 @@
+.setting-body{
+  	overflow: hidden;
+    border: solid 1px #add8e6;
+    border-radius: 0px 0px 4px 4px;
+}    
+.setting-body .setting-panel{
+	/* padding: 10px; */
+	padding: 5px 0px 0px;
+	height: 100%;
+}    
+.setting-body .setting-panel h4{
+	font-weight: 600;
+}
+.setting-body .setting-panel .col{
+	padding: 0px 10px;
+	height: 100%;
+}    
+.setting-body .setting-panel .form-horizontal{
+	padding: 10px 0px; 
+}
+.col .col-title{
+ 	background-color: #FFF;
+    border-bottom: 1px;
+    border-style: solid none solid;
+    border-width: 4px 0px 1px;
+    border-color: #e7eaec;
+}
+.number-input{
+    width: 98px;
+    border-radius: 4px;
+    border: solid 1px #cccccc;
+    outline: 0px none;
+    padding: 5px;
+}
+
+
+

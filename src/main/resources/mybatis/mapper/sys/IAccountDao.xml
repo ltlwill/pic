@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="com.hengzhiyi.it.pic.dao.IAccountDao">
+    	<resultMap id="AccountVOMap" type="com.hengzhiyi.it.pic.vo.AccountVO">
+    		<id column="ID" property="id" jdbcType="NUMERIC"/>
+    		<result column="NAME" property="name" jdbcType="VARCHAR"/>
+    		<result column="PLATFORM" property="platform" jdbcType="VARCHAR"/>
+    		<result column="USER_ID" property="userId" jdbcType="VARCHAR"/>
+    		<result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+    		<result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR"/>
+    	</resultMap>
+    
+    	<!-- 分业务获取账号信息 -->
+    	<select id="getAccountList" parameterType="com.hengzhiyi.it.pic.vo.PagedVO" resultMap="AccountVOMap">
+    		SELECT *
+			  FROM (SELECT a.*, rownum rn
+			          from (
+    						<include refid="pagedCommonSql"/>
+			    		) a 
+		    		)
+			 WHERE rn <![CDATA[ >= ]]> #{beginIndex}
+			   AND rn <![CDATA[ <= ]]> #{endIndex}
+    	</select>
+    	
+    	<select id="getAccountListCount" parameterType="com.hengzhiyi.it.pic.vo.PagedVO" resultType="java.lang.Integer">
+    		SELECT COUNT(*) FROM (
+    			<include refid="pagedCommonSql"/>
+    		)
+    	</select>
+    	
+    	<!-- 根据ID获取账号 -->
+    	<select id="getAccontById" resultMap="AccountVOMap">
+    		SELECT * FROM pic_account a WHERE a.id = #{0,jdbcType=NUMERIC}
+    	</select>
+    	<select id="getAccounts" parameterType="com.hengzhiyi.it.pic.vo.AccountVO" resultMap="AccountVOMap">
+    		SELECT * FROM pic_account a 
+			<where>
+				<if test="id != null and id != ''">
+					AND a.id = #{id,jdbcType=NUMERIC}
+				</if>
+				<if test="name != null and name != ''">
+					AND a.name = #{name,jdbcType=VARCHAR}
+				</if>
+				<if test="platform != null and platform != ''">
+					AND a.platform = #{platform,jdbcType=VARCHAR}
+				</if>
+				<if test="userId != null and userId != ''">
+					AND a.user_id = #{userId,jdbcType=VARCHAR}
+				</if>
+				<if test="userName != null and userName != ''">
+					AND a.user_name = #{userName,jdbcType=VARCHAR}
+				</if>
+			</where>
+    	</select>
+    	
+    	<select id="getAllAccounts" resultMap="AccountVOMap">
+    		SELECT * FROM pic_account a ORDER BY a.platform,a.name
+    	</select>
+    	
+    	<sql id="pagedCommonSql">
+    		SELECT * FROM pic_account u
+   			WHERE 1=1
+   			<if test="keyWord != null and keyWord != ''">
+   				AND INSTR(UPPER(u.name),UPPER(#{keyWord,jdbcType=VARCHAR})) <![CDATA[ > ]]> 0 
+   				OR INSTR(UPPER(u.platform),UPPER(#{keyWord,jdbcType=VARCHAR})) <![CDATA[ > ]]> 0 
+   			</if>
+    		ORDER BY u.create_time DESC
+    	</sql>
+    	
+    	<insert id="addAccount" parameterType="com.hengzhiyi.it.pic.vo.AccountVO">
+    		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+    			SELECT PIC_ACCOUNT_SEQ.NEXTVAL FROM DUAL
+    		</selectKey>
+    		INSERT INTO pic_account(id,name,platform,user_id,user_name,create_time) 
+    		VALUES
+    		(
+    			#{id,jdbcType=NUMERIC},
+    			#{name,jdbcType=VARCHAR},
+    			#{platform,jdbcType=VARCHAR},
+    			#{userId,jdbcType=NUMERIC},
+    			#{userName,jdbcType=VARCHAR},
+    			#{createTime,jdbcType=TIMESTAMP}
+			)
+    	</insert>
+    	
+    	<update id="editAccount" parameterType="com.hengzhiyi.it.pic.vo.AccountVO">
+    		UPDATE pic_account a
+    		SET a.name = #{name,jdbcType=VARCHAR},
+    			a.platform = #{platform,jdbcType=VARCHAR}
+    		WHERE a.id = #{id,jdbcType=NUMERIC}
+    	</update>
+    	
+    	<update id="delAccountByIds" parameterType="java.util.List">
+    		DELETE FROM pic_account a 
+    		WHERE a.id IN
+    		<foreach item="_id" index="index" collection="list" open="(" close=")" separator=",">
+    			#{_id,jdbcType=NUMERIC}
+    		</foreach>
+    	</update>
+    </mapper>  
+    
+    
+    
+    
+    

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+   <configuration>
+   	<mappers>
+   		<!-- 这种属于精确引入，需要将每个文件都列举出来，繁琐，不推荐-->
+   		<!-- <mapper resource="/mybatis/mapper/user/userMapper.xml"/> -->
+   		
+   		<!-- 这种属于模糊引入，相当于正则表达式一样，不需要每个文件都列举，比较方便(不知道为毛不支持模糊匹配，会找不到资源) -->
+   		<!-- <mapper resource="classpath*:/mybatis/mapper/*/*.xml"/> -->
+   	</mappers>
+   </configuration>

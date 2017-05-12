@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="com.hengzhiyi.it.pic.dao.IImgSearchDao">
+    	
+    	<!-- 使用ehcache缓存 -->
+    	<cache type="org.mybatis.caches.ehcache.LoggingEhcache"></cache>
+    	<!-- <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache> -->
+    	
+    	<resultMap type="com.hengzhiyi.it.pic.vo.ImageVO" id="ImageVOMap">
+    		<result column="id" property="id" jdbcType="NUMERIC"/>
+    		<result column="name" property="name" jdbcType="VARCHAR"/>
+    		<result column="url" property="url" jdbcType="VARCHAR"/>
+    		<result column="extension" property="extension" jdbcType="VARCHAR"/>
+    		<result column="absolute_path" property="absolutePath" jdbcType="VARCHAR"/>
+    		<result column="relative_path" property="relativePath" jdbcType="VARCHAR"/>
+    		<result column="upload_date" property="uploadDate" jdbcType="TIMESTAMP"/>
+    		<result column="user_id" property="userId" jdbcType="VARCHAR"/>
+    		<result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    		<result column="remark" property="remark" jdbcType="VARCHAR"/>
+    		<result column="small_absolute_path" property="smallAbsolutePath" jdbcType="VARCHAR"/>
+    		<result column="small_relative_path" property="smallRelativePath" jdbcType="VARCHAR"/>
+    		<result column="account_id" property="accountId" jdbcType="VARCHAR"/>
+    	</resultMap>
+    	
+    	<!-- 查询图片 -->
+		<!-- <select id="findImages" parameterType="com.hengzhiyi.it.pic.vo.PagedVO" resultType="com.hengzhiyi.it.pic.vo.ImageVO"> -->
+		<select id="findImages" parameterType="com.hengzhiyi.it.pic.vo.PagedVO" resultMap="ImageVOMap" useCache="false">
+			SELECT *
+			  FROM (SELECT a.*, rownum rn
+			          from (
+    						<include refid="pagedFindCommonSql"/>
+			    		) a 
+		    		)
+			 WHERE rn <![CDATA[ >= ]]> #{pagedVo.beginIndex}
+			   AND rn <![CDATA[ <= ]]> #{pagedVo.endIndex}
+    	</select>    	
+    	
+    	<!-- 分页查询公共SQL -->
+    	<sql id="pagedFindCommonSql">
+    		SELECT * FROM (
+    			<include refid="findCommonSql"/>
+    		)
+    		<where>
+    			<if test="pagedVo.keyWord != null and pagedVo.keyWord != '' ">
+			 		AND INSTR(UPPER(name), UPPER(#{pagedVo.keyWord})) <![CDATA[ > ]]> 0
+				</if>
+				<if test="user != null and user.userType != 0 and user.userType != 1">
+					AND (account_id IS NULL 
+					OR
+					(
+						account_id IS NOT NULL 
+						AND account_id 
+						IN(
+							SELECT u.account_id FROM pic_user_account u WHERE u.user_id = #{user.userId}
+						)
+					))
+				</if>
+    		</where>
+    	</sql>
+    	
+    	<!-- 图片查询公共SQL -->
+    	<sql id="findCommonSql">
+    		SELECT i.id,
+		       i.name,
+		       i.url,
+		       i.extension,
+		       i.absolute_path,
+		       i.relative_path,
+		       i.upload_date,
+		       i.user_id,
+		       i.user_name,
+		       i.remark,
+		       i.small_absolute_path,
+		       i.small_relative_path,
+		       i.account_id
+		  FROM pic_images i
+		  ORDER BY i.id DESC
+    	</sql>
+    	
+    	<!-- 通过SKU查询图片 -->
+    	<!-- <select id="getImagesBySku" resultType="com.hengzhiyi.it.pic.vo.ImageVO"> -->
+    	<select id="getImagesBySku" resultMap="ImageVOMap">
+    		SELECT * FROM (
+    			<include refid="findCommonSql"/>
+    		) a
+			 <where>
+			 	INSTR(a.name,#{0}) <![CDATA[ > ]]> 0
+			 </where>
+			 ORDER BY a.name ASC,a.id ASC
+    	</select>
+    
+    	<!-- 查询总数 -->
+    	<select id="findImagesCount" parameterType="com.hengzhiyi.it.pic.vo.PagedVO" resultType="int">
+    		SELECT COUNT(*) FROM (
+    			<include refid="pagedFindCommonSql"/>
+    		)
+    	</select>
+    	
+    	<!-- 根据ID查询图片 -->
+    	<!-- <select id="findImagesByIds" parameterType="java.util.List" resultType="com.hengzhiyi.it.pic.vo.ImageVO"> -->
+    	<select id="findImagesByIds" parameterType="java.util.List" resultMap="ImageVOMap">
+    		SELECT * FROM (
+    			<include refid="findCommonSql"/>
+    		) a
+		 	WHERE a.id IN 
+			<foreach item="id" collection="list" open="(" separator="," close=")">
+			 	#{id}
+			</foreach>
+    	</select>
+    	
+    	<!-- 根据ID删除图片数据 -->
+    	<delete id="deleteImagesByIds" parameterType="java.util.List">
+    		DELETE FROM pic_images i WHERE i.id IN 
+    		<foreach item="id" collection="list" open="(" separator="," close=")">
+    			#{id}
+    		</foreach>
+    	</delete>
+    
+    </mapper>  
+    
+    
+    
+    
+    

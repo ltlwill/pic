@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	    <meta name="viewport" content="width=device-width,initial-scale=1.0"> 
+		<meta name="author" content="test">
+		<meta name="description" content="test">
+		<meta name="copyright" content="test">
+		<title>Download</title>
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript">
+		(function(){
+			var params = getRequestParams(),
+				prefix = location.protocol + '//' + location.host + '/',
+				// initUrl =  prefix + (params.contextPath || '') + '/resources/app/update.json',
+				initUrl =  prefix + '/appspace/update.json?_r=' + new Date().getTime(),
+				initData = {};
+			// 请求后台
+			doGet(initUrl,{success: function(result){
+				initData = result ? eval('(' + result + ')') : {};
+				init();
+			},error: function(th){
+			}});
+			
+			function getRequestParams(){
+				var str = location.search || '',
+					str = str ? str.substring(1) : '',
+					arr = str.split('&'),
+					params = {},
+					splitArr,pName,pValue;
+				for(var i in arr){
+					if(!arr[i]){
+						continue;
+					}
+					splitArr = arr[i].split('=');
+					pName = splitArr[0];
+					pValue = splitArr.length == 2 ? splitArr[1] : '';
+					params[pName] = pValue;
+				}
+				return params;
+			};
+			
+			function init(){
+				// 环境
+				var u = navigator.userAgent, app = navigator.appVersion;
+				// 移动终端
+				var Terminal = {
+					platform: {
+						android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, // Android终端或UC浏览器
+						iPhone: u.indexOf('iPhone') > -1 ,                             // iPhone或者QQHD浏览器
+						iPad: u.indexOf('iPad') > -1,                                  // iPad
+						ios: (u.indexOf('iPhone') > -1 || u.indexOf('iPad') > -1)      // ios
+					},	
+					// 语言（zh-cn、en-us、ko-kr等语言）
+					language: (navigator.browserLanguage || navigator.language).toLowerCase()
+				};
+				// 测试 
+				// Terminal.platform.ios = true;
+				
+				var url;
+				if(Terminal.platform.android)
+				{
+					url = prefix + (initData.android ? initData.android.webUrl : '');
+				}else if(Terminal.platform.ios){
+					url = prefix + (initData.ios ? initData.ios.webUrl : '');
+				}else{
+					alert('资源不存在');
+					return false;
+				}	
+				location.href = url; // 跳转
+			};
+			
+			// Ajax请求
+			function doGet(url,opts){
+				opts = opts || {};
+				var xmlHttp;
+				if(window.XMLHttpRequest){
+					//  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+					xmlHttp = new XMLHttpRequest();
+				}else{
+					// // IE6, IE5 浏览器执行代码
+					xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				// 状态变化
+				xmlHttp.onreadystatechange = function(){
+					if(xmlHttp.readyState == '4' && xmlHttp.status == '200'){
+						opts.success ? opts.success.call(this,xmlHttp.responseText) : null;
+					}else{
+						opts.error ? opts.error.call(this,xmlHttp.responseText) : null;
+					}
+				};
+				var params = opts.data || {};
+				if(url.indexOf('?') < 0){
+					url += '?';
+				}
+				for(var name in params){
+					url += '&' + name + '=' + params[name];
+				}
+				// 建立连接
+				xmlHttp.open('GET',url,typeof opts.async == 'undefined' ? true : opts.async);
+				// 发送
+				xmlHttp.send();
+			}
+		})();
+	</script>
+</html>	

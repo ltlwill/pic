@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="com.hengzhiyi.it.pic.dao.ISysSettingsDao">
+    	<resultMap id="SysSettingsVOMap" type="com.hengzhiyi.it.pic.vo.SysSettingsVO">
+    		<result column="content" property="content" jdbcType="CLOB"/>
+    		<result column="update_date" property="updateDate" jdbcType="TIMESTAMP"/>
+    	</resultMap>
+    
+    	<!-- 新增 -->
+    	<insert id="add" parameterType="com.hengzhiyi.it.pic.vo.SysSettingsVO">
+    		INSERT INTO pic_sys_settings(content,update_time) 
+    		VALUES
+    		(
+    			#{content,jdbcType=CLOB},
+    			#{updateTime,jdbcType=TIMESTAMP}
+			)
+    	</insert>
+    	<!-- 更新 -->
+    	<update id="update" parameterType="com.hengzhiyi.it.pic.vo.SysSettingsVO">
+    		UPDATE pic_sys_settings a
+    		SET a.content = #{content,jdbcType=CLOB},
+    			a.update_time = #{updateTime,jdbcType=TIMESTAMP}
+    	</update>
+    	<!-- 获取 -->
+    	<select id="getAll" resultMap="SysSettingsVOMap">
+    		SELECT a.content FROM pic_sys_settings a
+    	</select>
+    </mapper>  
+    
+    
+    
+    
+    

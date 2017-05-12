@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+     xmlns:jee="http://www.springframework.org/schema/jee"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/jee 
+        http://www.springframework.org/schema/jee/spring-jee.xsd">   
+    
+  <!-- 数据源配置区域   Begin -->
+    <!-- 配置DBCP数据源(DBCP2实现数据库连接池) -->
+    <bean id="dataSource_dbcp2" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+    	<!-- 数据库就驱动 -->
+    	<property name="driverClassName" value="${driverClassName}"/>
+    	<!-- URL -->
+    	<property name="url" value="${url}"/>
+    	<!-- userName,注如果用的是${username}或${userName}则取到的值是计算机的当前用户名，而不是数据库的用户名，特此注意 -->
+    	<property name="username" value="${user}"/>
+    	<!-- password -->
+    	<property name="password" value="${password}"/>
+    	
+    	<property name="initialSize" value="${initialSize}"/>
+    	<property name="maxTotal" value="${maxTotal}"/>
+    	<property name="maxIdle" value="${maxIdle}"/>
+    	<property name="minIdle" value="${minIdle}"/>
+    </bean>
+    
+    <!-- 配置 C3P0数据源(使用C3P0实现数据库连接池)-->
+    <bean id="dataSource_c3p0" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+    	<property name="description" value="This is c3p0 database connection pool"/>
+    	<property name="driverClass" value="${driverClassName}"/>
+    	<property name="jdbcUrl" value="${url}"/>
+    	<property name="user" value="${user}"/>
+    	<property name="password" value="${password}"/>
+    </bean>
+    
+    <!-- 配置spring数据源(使用Spring的数据库连接实现,是Spring简单的实现了javax.sql.DataSource，并没有池化，也就是说没有dbcp和c3p0那样的连接池) -->
+    <bean id="dataSource_spring" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="${driverClassName}"/>
+    	<property name="url" value="${url}"/>
+    	<property name="username" value="${user}"/>
+    	<property name="password" value="${password}"/>
+    </bean>
+    
+    <!-- JNDI 1: 使用JNDI来配置数据源(用Spring的jee:jndi-lookup标签)，个人比较推荐这种，简洁、方便 -->
+    <jee:jndi-lookup id="dataSource_jndi_1" jndi-name="jdbc/pic_ds"/>
+    
+    <!-- JNDI 2: 使用JNDI来配置数据源(用Spring的org.springframework.jndi.JndiObjectFactoryBean类) -->
+    <!-- <bean id="dataSource_jndi_2" class="org.springframework.jndi.JndiObjectFactoryBean">
+    	<property name="jndiName" value="jdbc/pic_ds"/>
+    </bean> -->
+ <!-- 数据源配置区域  End -->  
+    
+    <!-- spring与mybatis整合，不需要mybatis的配置映射文件 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<!-- 指定一个数据源 -->
+    	<!-- <property name="dataSource" ref="dataSource_dbcp2"/> -->
+    	<!-- <property name="dataSource" ref="dataSource_c3p0"/> -->
+    	<!-- <property name="dataSource" ref="dataSource_spring"/> -->
+    	<property name="dataSource" ref="dataSource_jndi_1"/>
+    	
+    	<!-- 1.配置这个属性指定一个mybatis配置文件，可以在此文件中引入mapping文件来实现 ，此属性与mapperLocations配置引入其他的mybatis资源即可实现-->
+    	<!-- <property name="configLocation" value="classpath:/mybatis/config/sqlMapConfig.xml"/> -->
+    	
+    	<!-- 2.自动扫描mtbatis的mapping配置文件，不需要一个个列举出来 (注经测试，这个属性还不支持2个*的形式，只支持1个*的形式)-->
+    	<property name="mapperLocations" value="classpath*:/mybatis/mapper/*/*.xml"/>
+    </bean>
+    
+    <!-- 配置事务管理,这里用JDBC事务，也可以用其他的事务管理，如JTA进行全局、分布式的事务管理 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    	<!-- 指定要进行事务管理的数据源 -->
+    	<!-- <property name="dataSource" ref="dataSource_dbcp2"/> -->
+    	<!-- <property name="dataSource" ref="dataSource_c3p0"/> -->
+    	<!-- <property name="dataSource" ref="dataSource_spring"/> -->
+    	<property name="dataSource" ref="dataSource_jndi_1"/>
+    </bean>
+    
+    <!-- spring与mybatis整合配置，扫描所有dao -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    	<!-- 指定要扫描的包 -->
+    	<property name="basePackage" value="com.hengzhiyi.it.pic.dao"/>
+    	<property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+    	<!--1. 指定sqlSessionFactory(注：这样注入会导致数据库中的占位符失效出现'for input string ${initialSize}'的问题，原因是MapperScannerConfigurer在
+    		PropertyPlaceholderConfigurer类执行之前执行的，所以当注入sqlSessionFactory时触发了SqlSessionFactoryBean的创建，而SqlSessionFactoryBean又触发了
+    		BasicDataSource的创建，而BasicDataSource使用了占位符，而占位符资源都还没有加载，导致出现启动时错误)，应该指定的是一个bean名称就不会出现错误了，如下所示 -->
+    	<!-- <property name="sqlSessionFactory" ref="sqlSessionFactory"/> -->
+    	<!--2. 指定一个使用的sqlSessionFactory工厂的bean名称，不会导致 sqlSessionFactory创建bean对象-->
+    	<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+    
+    <!-- 事务控制一: 启用spring的注解申明式事务控制 (既可以在java代码中使用@Transactional来进行事务控制)-->
+   <!--  <tx:annotation-driven transaction-manager="txManager"/> -->
+    
+    <!-- 事务控制二: 启用 spring的aop申明式事务控制  Begin-->
+    <aop:config>
+    	<!-- 配置默认需要事务管理的类 -->
+    	<aop:pointcut id="defaultServiceOperation" expression="execution(* com.hengzhiyi.it.pic.services..*Service.*(..))"/>
+    	<!-- 配置不需要事务管理的特殊类 -->
+    	<aop:pointcut id="noTxServiceOperation" expression="execution(* com.hengzhiyi.it.pic.services.ddl.*.*(..))"/>
+    	
+    	<aop:advisor pointcut-ref="defaultServiceOperation" advice-ref="defaultTxAdvice"/>
+    	
+    	<aop:advisor pointcut-ref="noTxServiceOperation" advice-ref="noTxAdvice"/>
+    </aop:config>
+    
+    <tx:advice id="defaultTxAdvice" transaction-manager="txManager">
+    
+    	<!-- 1. 除了get,find,query开头的方法是只读外，其余的方法都是有事务控制的 -->
+    	<tx:attributes>
+    		<!-- 查 ，注:只有当propagation为默认即REQUIRED时，在只读的方法中做增删改才不成功，否则的话可以在定义了readOnly=true的方法中还可以做增删改操作-->
+    		<tx:method name="get*" propagation="REQUIRED" read-only="true"/>
+    		<tx:method name="find*" propagation="REQUIRED" read-only="true"/>
+    		<tx:method name="query*" propagation="REQUIRED" read-only="true"/>
+    		<!-- 其他的方法都有事务控制 -->
+    		<tx:method name="*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception" no-rollback-for="com.hengzhiyi.it.pic.exception.NoTxException"/>
+    	</tx:attributes>
+    </tx:advice>
+    
+    <tx:advice id="noTxAdvice" transaction-manager="txManager">
+    	<tx:attributes>
+    		<tx:method name="*" propagation="NEVER"/>
+    	</tx:attributes>
+    </tx:advice>
+    <!-- 事务控制二  End -->
+    
+</beans>
+
+
+
+
+
+

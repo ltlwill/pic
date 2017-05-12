@@ -1,0 +1,60 @@
+.ui-mygrid-table{
+	position: relative;
+	table-layout: fixed;
+	background-color: #FFF;
+	border: 1px solid #e5e6e7;
+}
+.ui-mygrid-table .ui-mygrid-row{
+	position: relative;
+	display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+    margin: 0px;
+    padding: 0px;
+    vertical-align: middle;
+    word-wrap: break-all;
+}
+.ui-mygrid-table .ui-mygrid-head-row{
+	font-weight: bold;
+}
+.ui-mygrid-table .ui-mygrid-body-row{
+	
+}
+.ui-mygrid-table tr.ignore{
+	display: none;
+}
+.ui-mygrid-table .ui-mygrid-col{
+	position: relative;
+	border-top: 0px none;
+    white-space: normal !important;
+    height: auto;
+    vertical-align: middle;
+    word-break: break-all;
+    border-top: solid 1px #e5e6e7;
+    border-left: 0px none; 
+    border-right: solid 1px #e5e6e7;
+    padding: 5px;
+}
+.ui-mygrid-table .ui-mygrid-col .form-control{
+	padding: 4px 5px;
+	max-width: 100%;
+}
+.ui-mygrid-table .ui-mygrid-col textarea{
+	height: 30px;
+}
+.ui-mygrid-table .ui-mygrid-col .del-col-btn{
+	position: absolute;
+	top: -22px;
+	left: 45%;
+	z-index: 99;
+	color: #1ab394;
+	cursor: pointer;
+	-webkit-transform: scale(0.7,0.7);
+	-moz-transform: scale(0.7,0.7);
+	-o-transform: scale(0.7,0.7);
+	-ms-transform: scale(0.7,0.7);
+	transform: scale(0.7,0.7);
+}
+
+
+

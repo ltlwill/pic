@@ -1,0 +1,128 @@
+.myphoto{
+    z-index: 99990;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+}
+.myphoto a{
+	cursor: pointer;
+}
+.myphoto > .close{
+	z-index: 99993;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 49px;
+    height: 49px;
+    cursor: pointer;
+    background: transparent url('../images/close.png') no-repeat 50% 50%;
+    opacity: 1;
+    filter: alpha(opacity=100);
+    border-radius: 0 0 0 4px;
+}
+.myphoto > .previous,.myphoto > .next{
+    z-index: 99992;
+    position: absolute;
+    top: 50%;
+    overflow: hidden;
+    display: block;
+    width: 49px;
+    height: 49px;
+    margin-top: -25px;
+}
+.myphoto > .previous{
+    left: 0;
+    background: url('../images/arrows.png') no-repeat 0 0;
+    border-radius: 0 4px 4px 0;
+}
+.myphoto > .next{
+	right: 0;
+    background: url('../images/arrows.png') no-repeat 100% 0;
+    border-radius: 4px 0 0 4px;
+}
+.myphoto > .content{
+	z-index: 99991;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    background: #ffffff no-repeat 50% 50%;
+    padding: 0;
+  /*  margin: -100px 0 0 -100px;*/
+    box-shadow: -20px 20px 20px rgba(0, 0, 0, 0.3);
+  /*   border-radius: 4px; */
+}
+.myphoto > .title{
+	padding: 5px 0px;
+	margin: 0px;
+	width: 100%;
+	text-align: center;
+	text-overflow: ellipsis;
+	overflow: hidden;
+    color: #FFF;
+    font-size: 16px;
+}
+}
+.myphoto > .content > img{
+    display: block;
+    max-width: none;
+    background: #ececec;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    border-radius: 4px;
+}
+.myphoto > .toolbar{
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+    bottom: 0px;
+    width: 100%;
+    max-width: 100%;
+    max-height: 35px;
+    text-align: center;
+}
+.myphoto > .toolbar > .icon{
+	color: #CCC;
+	cursor: pointer;
+	padding: 0px 10px;
+}
+.myphoto > .toolbar > .icon:hover{
+	color: #FFF;
+}
+.myphoto > .help{
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	color: #CCC;
+}
+.myphoto > .help:hover + .help-content{
+	display: block;
+}
+.myphoto > .help-content{
+	position: absolute;
+	top: 20px;
+	left: 25px;
+	color: #FFF;
+	border: solid 1px #CCC;
+	padding: 5px;
+	display: none;
+	background-color: #000;
+	z-index: 999999999;
+}
+.myphoto > .help-content > p.info{
+	font-size: 12px;
+    font-style: normal;
+    text-indent: 10px;
+}
+.myphoto > .help-content > p.info > .icon{
+    margin: 0px;
+    padding: 0px;
+    text-indent: 0px;
+}
+.myphoto > .help-content > p{
+	margin: 0px;
+}

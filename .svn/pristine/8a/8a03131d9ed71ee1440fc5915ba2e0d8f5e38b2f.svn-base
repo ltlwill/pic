@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	    <meta name="viewport" content="width=device-width,initial-scale=1.0"> 
+		<meta name="author" content="test">
+		<meta name="description" content="test">
+		<meta name="copyright" content="test">
+		<title>demo</title>
+		
+		<link rel="stylesheet" type="text/css" href="plugins/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="plugins/fontawesome/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="css/myphoto.css">
+		
+		<script type="text/javascript" src="js/jquery-1.11.3.js"></script>
+		<script type="text/javascript" src="js/myphoto.js"></script>
+		
+		<style>
+			body{
+				background-color: #f4f4f4;
+			}
+			.container{
+				
+			}
+			.demo-wrapper{
+				width: 505px;
+				margin: 0 auto;
+				padding: 0px;
+				margin-top: 50px;
+				/*border: solid 1px blue;*/
+				display: block;
+			}
+			.demo-list{
+				list-style: none;
+				float: left;
+				margin: 0px;
+				padding: 20px 20px 10px 20px;
+			}
+			.demo-list > li{
+				list-style: none;
+			    float: left;
+			    padding: 0px 10px 10px 0px;
+			}
+			.demo-list > li > img{
+				width: 100px;
+				height: 100px;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="demo-wrapper">
+				<ul class="demo-list">
+					<li>
+						<img src="images/1.jpg" name="1.jpg"/>
+					</li>
+					<li>
+						<img src="images/2.jpg" name="2.jpg"/>
+					</li>
+					<li>
+						<img src="images/3.jpg" name="3.jpg"/>
+					</li>
+					<li>
+						<img src="images/4.jpg" name="4.jpg"/>
+					</li>
+					<li>
+						<img src="images/5.jpg" name="5.jpg"/>
+					</li><li>
+						<img src="images/9.jpg" name="9.jpg"/>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		(function(){
+			window.onload = function()
+			{
+				var $ul = $('.demo-list');
+				var myphoto = $ul.myPhoto({
+					imgSelector:'img',
+					urlAttrName:'src',
+					titleAttrName: 'name',
+					btns:[
+						{id:'btn_photo_copy_addr',iconCls:'icon icon-copy icon-2x',alt:'复制地址',hanlder:function($img,index){
+							alert('已复制');
+						}},
+						{iconCls:'icon icon-download-alt icon-2x',alt:'下载图片',hanlder:function($img,index){
+							alert('已下载');
+						}},
+					]
+				});
+				
+				$ul.on('click','li>img',function(){
+					myphoto.open($ul.children('li').index($(this).parent()));
+				});
+			};
+		})();
+		
+	</script>
+</html>	

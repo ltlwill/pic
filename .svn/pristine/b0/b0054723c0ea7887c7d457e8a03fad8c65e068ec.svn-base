@@ -1,0 +1,59 @@
+.pic-child-container .pic-child-content .row{
+	padding: 5px;
+	margin: 0px;
+}
+.img-wrapper{
+    width: 260px;
+    height: auto;
+    margin: 100px auto 0px;
+    border: solid 1px #00b7ee;
+    padding: 0px 25px;
+    text-align: center;
+    color: #909090;
+}
+.img-wrapper img{
+    border: none;
+    margin: 0px auto;
+    width: 200px;
+    height: 200px;
+}
+.img-wrapper p{
+	padding: 5px 0px;
+	margin: 0px;
+}
+.img-wrapper p .important{
+	color: #d45252;
+}
+.img-wrapper .platform{
+    color: #333;
+    font-weight: bold;
+    font-size: 18px;
+}
+.img-wrapper .download{
+	background-color: #00b7ee;
+    color: #fff;
+    margin-left: -26px;
+    margin-right: -26px;
+    margin-top: 10px;
+}
+.img-wrapper .placeholder{
+	padding: 0px;
+}
+.img-wrapper .download:HOVER{
+	background-color: #00A2D4;
+}
+.img-wrapper .download a{
+    color: #fff;
+    outline: 0px none;
+    text-decoration: none;
+}
+.img-wrapper.barcode{
+    margin-top: 161px;
+	border: none;    
+}
+.img-wrapper.barcode .barcode .barcode-content{
+	border: none;
+    margin: 0px auto;
+    width: 200px;
+    height: 200px;
+}

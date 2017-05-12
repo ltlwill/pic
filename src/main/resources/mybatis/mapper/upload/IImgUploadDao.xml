@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="com.hengzhiyi.it.pic.dao.IImgUploadDao">
+    	
+    	<!-- oracle insert with primary key use sequence -->
+    	
+    	<!-- 保存上传的图片 -->
+    	<insert id="saveImage" parameterType="com.hengzhiyi.it.pic.vo.ImageVO">
+    		<!-- 设置主键 -->
+    		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+    			select pic_images_seq.nextval from dual
+    		</selectKey>
+    		INSERT INTO pic_images VALUES(
+    			#{id,jdbcType=NUMERIC},
+				#{name,jdbcType=VARCHAR},
+				#{url,jdbcType=VARCHAR},
+				#{extension,jdbcType=VARCHAR},
+				#{absolutePath,jdbcType=VARCHAR},
+				#{relativePath,jdbcType=VARCHAR},
+				<!-- #{uploadDate,jdbcType=DATE},用DATE时保存到oracle数据库没有时分秒 -->
+				#{uploadDate,jdbcType=TIMESTAMP},
+				#{userId,jdbcType=VARCHAR},
+				#{userName,jdbcType=VARCHAR},
+				#{remark,jdbcType=VARCHAR},
+				#{smallAbsolutePath,jdbcType=VARCHAR},
+				#{smallRelativePath,jdbcType=VARCHAR},
+				#{accountId,jdbcType=VARCHAR}
+			)
+    	</insert>
+    	
+    	<!-- 保存上传图片的日志 -->
+    	<insert id="saveUploadLog" parameterType="com.hengzhiyi.it.pic.vo.UploadLogVO">
+    		<!-- 设置主键 -->
+    		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+    			select pic_upload_log_seq.nextval from dual
+    		</selectKey>
+    		INSERT INTO pic_upload_log VALUES(
+    			#{id,jdbcType=NUMERIC},
+				#{operatorId,jdbcType=VARCHAR},
+				#{operatorName,jdbcType=VARCHAR},
+				#{fileName,jdbcType=VARCHAR},
+				#{absolutePath,jdbcType=VARCHAR},
+				#{relativePath,jdbcType=VARCHAR},
+				<!-- #{uploadDate,jdbcType=DATE},用DATE时保存到oracle数据库没有时分秒 -->
+				#{uploadDate,jdbcType=TIMESTAMP}
+			)
+    	</insert>
+    </mapper>  
+    
+    
+    
+    
+    
