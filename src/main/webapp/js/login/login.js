@@ -25,17 +25,17 @@ var LoginMgr =
 		initElesData: function()
 		{
 			var settings = window.sysSettings || [];
-			if(settings && settings.length)
+			if(settings && settings.workTimes && settings.workTimes.length)
 			{
-				var flag = false;
-				for(var i in settings)
+				var flag = false,workTimes = settings.workTimes;
+				for(var i in workTimes)
 				{
-					if(!settings[i].startTime && !settings[i].endTime)
+					if(!workTimes[i].startTime && !workTimes[i].endTime)
 					{
 						continue;
 					}
 					flag = true;
-					$('<p>').html((settings[i].startTime || '') +' 至  ' + (settings[i].endTime || '')).appendTo(this.$noticeDetail);
+					$('<p>').html((workTimes[i].startTime || '') +' 至  ' + (workTimes[i].endTime || '')).appendTo(this.$noticeDetail);
 				}	
 				flag ? this.$notice.show() : null;
 			}	

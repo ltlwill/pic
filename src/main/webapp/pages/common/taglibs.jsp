@@ -16,7 +16,7 @@
 <c:set var="contextPath" value="<%=request.getContextPath()%>" scope="session"/>
 <c:set var="defaultPage" value="/pages/home/home.jsp" scope="session"/>
 <!-- 应用版本号，先放在前端，解决在修改一些代码后，一些浏览器需要手动清楚缓存才能生效的问题。当前若需要更改版本，在此修改value=XX即可 -->
-<c:set var="appV" value="1.3.2.1" scope="session"/>
+<c:set var="appV" value="1.3.2.3" scope="session"/>
 
 
 

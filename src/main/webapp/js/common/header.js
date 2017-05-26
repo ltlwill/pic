@@ -88,16 +88,32 @@ var HeadMgr = {
 		this.$errorMsg.html('').parent().hide();
 		// 初始化数据
 		var settingData = this.getSettingData();
-		if(settingData && settingData.length)
+		// 时间段
+		if(settingData && settingData.workTimes && settingData.workTimes.length)
 		{
+			var times = settingData.workTimes || [];
 			this.$settingForm.find('.clockpicker-group').each(function(i,o){
-				if(settingData[i])
+				if(times[i])
 				{
 					$(this).find('input').each(function(){
-						$(this).val(settingData[i][$(this).attr('name')] || '');
+						$(this).val(times[i][$(this).attr('name')] || '');
 					});
 				}
 			});
+		}
+		// 工作日
+		var workDays = this.getAllOriginalWorkDays(settingData.workDays || []),
+			$container = this.$settingForm.find('.work-day-container').empty(),day;
+		for(var i in workDays)
+		{
+			day = workDays[i] || {};
+			$('<div/>').addClass('item')
+			.append($('<input type="checkbox"/>')
+					.attr('id','work_day_' + day.id)
+					.attr(day.checked ? 'checked' : 'un-checked',true)
+					.data('data-value',day.id))
+			.append($('<label/>').attr('for','work_day_' + day.id).text(day.text))
+			.appendTo($container);
 		}
 	},
 	getSettingData: function()
@@ -138,7 +154,8 @@ var HeadMgr = {
 	},
 	getSettingParams: function()
 	{
-		var data = [],row;
+		var workTimes = [],workDays = [],row;
+		// 工作时间段
 		this.$settingForm.find('.clockpicker-group').each(function(){
 			row = {};
 			$(this).find('input').each(function(){
@@ -146,9 +163,38 @@ var HeadMgr = {
 					row[$(this).attr('name')] = $(this).val() || '';
 				}
 			});
-			data.push(row);
+			workTimes.push(row);
 		});
-		return data;
+		// 工作日
+		this.$settingForm.find('.work-day-container').children('.item').each(function(i,o){
+			var $input = $(this).children('input');
+			if($input[0].checked)
+			{
+				workDays.push($input.data('data-value'));
+			}	
+		});
+		return {'workTimes':workTimes,'workDays':workDays};
+	},
+	getAllOriginalWorkDays: function(days)
+	{
+		var oDays = [
+	            {'id':'2','text':'星期一','checked':true},      // 默认工作日
+		        {'id':'3','text':'星期二','checked':true},      // 默认工作日
+		        {'id':'4','text':'星期三','checked':true},      // 默认工作日
+		        {'id':'5','text':'星期四','checked':true},      // 默认工作日
+		        {'id':'6','text':'星期五','checked':true},      // 默认工作日
+		        {'id':'7','text':'星期六','checked':false},     // 默认非工作日
+		        {'id':'1','text':'星期日','checked':false},     // 默认非工作日
+		];
+		days = days || [];
+		if(days && days.length)
+		{
+			for(var i in oDays)
+			{
+				oDays[i]['checked'] = Arrays.contains(days,oDays[i].id);
+			}
+		}	
+		return oDays;
 	},
 };
 // 启动

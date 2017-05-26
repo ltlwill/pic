@@ -15,7 +15,8 @@
     background: linear-gradient(top, #87cefa 25%, #add8e6 50%,#b0c4de 75% ,#add8e6 100%); */
    /*  background: url(../../images/header.jpg) center no-repeat; */
     background: url(../../images/header.png) center no-repeat;
-    background-size:cover;
+    /* background-size:cover; */
+	background-size: 100% 100%;    
 }
 
 .pic-header .user-info{
@@ -82,7 +83,28 @@
     padding: 6px 0px;
     margin-top: 10px;
 }
-
+.work-day-container{
+	padding: 5px 15px;
+}
+.work-day-container .item{
+    display: inline-block;
+    padding: 0px; 
+    margin: 0px;
+    padding-right: 15px
+}
+.work-day-container .item input{
+	margin: 0px;
+    padding: 0px;
+    position: absolute;
+    margin-top: 4px;
+}
+.work-day-container .item label{
+    padding: 0px;
+    margin: 0px;
+    margin-left: 15px;
+    font-weight: normal;
+    font-size: 12px;    
+}
 
 
 

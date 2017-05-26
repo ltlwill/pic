@@ -84,7 +84,7 @@
 		}
 		// 系统设置
 //		w.sysSettings = sysSettings =  sysSettingsStr ? eval('(' + sysSettingsStr + ')') : [];
-		w.sysSettings = sysSettings =  JSON.parse(sysSettingsStr || '[]');
+		w.sysSettings = sysSettings =  JSON.parse(sysSettingsStr || '{}');
 	})(window);
 	
 /*************************************AJAX全局设置*****************************************/	
@@ -323,7 +323,24 @@
 		
 	})(window,jQuery);
 	
-	
+	/************************************自定义工具**************************/
+	Arrays = {}
+	Arrays.contains = function(arr,key)
+	{
+		if(!key || key == null || key == '')
+		{
+			return false;
+		}	
+		var values = arr || [];
+		for(var i=0;i<values.length;i++)
+		{
+			if(values[i] == key)
+			{
+				return true;
+			}
+		}	
+		return false;
+	}
 	
 	
 	

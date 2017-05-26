@@ -259,6 +259,7 @@ public class SysService implements ISysService
 		return setting;
 	}
 
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public boolean validateLoginTime(User user) throws Exception
 	{
@@ -272,27 +273,37 @@ public class SysService implements ISysService
 		{
 			return true;
 		}
-		Calendar now = Calendar.getInstance();
-		int day = now.get(Calendar.DAY_OF_WEEK);
-		// 星期六星期天不允许登录
-		if (day == Calendar.SATURDAY || day == Calendar.SUNDAY)
-		{
-			return false;
-		}
 		// 获取系统设置
-		String settings = getSysSetting();
+		String settingsStr = getSysSetting();
 		// 没有设置信息，则直接通过
-		if (StringUtils.isBlank(settings))
+		if (StringUtils.isBlank(settingsStr))
 		{
 			return true;
 		}
+		JSONObject settings = JSONObject.fromObject(settingsStr);
+		JSONArray workDays = JSONArray.fromObject(settings
+				.getString("workDays"));
+		List<String> workDaysList = JSONArray.toList(workDays, String.class);
+		if (workDaysList == null)
+		{
+			workDaysList = new ArrayList<String>();
+		}
+		Calendar now = Calendar.getInstance();
+		int day = now.get(Calendar.DAY_OF_WEEK);
+		// 如果今天不是工作日
+		if (workDaysList != null && !workDaysList.isEmpty()
+				&& !workDaysList.contains(String.valueOf(day)))
+		{
+			return false;
+		}
 		// 开始验证设置的登录时间段
-		JSONArray arr = JSONArray.fromObject(settings);
+		JSONArray workTimes = JSONArray.fromObject(settings
+				.getString("workTimes"));
 		JSONObject o = null;
 		String startTimeStr = null, endTimeStr = null;
-		for (int i = 0; i < arr.size(); i++)
+		for (int i = 0; i < workTimes.size(); i++)
 		{
-			o = JSONObject.fromObject(arr.getString(i));
+			o = JSONObject.fromObject(workTimes.getString(i));
 			startTimeStr = o.getString("startTime");
 			endTimeStr = o.getString("endTime");
 			// 如果设置的时间段为空或者时时间段不符合规范，则不验证

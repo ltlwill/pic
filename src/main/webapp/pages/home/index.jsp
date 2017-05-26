@@ -203,7 +203,19 @@
 			                        </div>
 		                		</div>
 		                	</div>
-		                	
+		                	<div class="form-group">
+		                		<label class="col-sm-12 control-label">设置本周工作日</label>
+		                		<div class="col-sm-12 work-day-container">
+		                			<div class="item">
+		                				<input type="checkbox" id="work_data_1"/>
+		                				<label for="work_data_1">星期一</label>
+		                			</div>
+		                			<div class="item">
+		                				<input type="checkbox" id="work_data_2"/>
+		                				<label for="work_data_2">星期二</label>
+		                			</div>
+		                		</div>
+		                	</div>	
 		                </form>
 		            </div>
 		            <div class="modal-footer">
